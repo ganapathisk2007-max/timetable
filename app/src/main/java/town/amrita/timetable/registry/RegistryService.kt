@@ -3,25 +3,25 @@ package town.amrita.timetable.registry
 import kotlinx.serialization.json.Json
 import town.amrita.timetable.models.Timetable
 import okhttp3.MediaType.Companion.toMediaType
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-
 class RegistryService {
   interface RegistryServiceImpl {
     @GET("index.json")
-    fun getRegistry(): Call<Registry>
+    suspend fun getRegistry(): Registry
 
     @GET("files/{year}/{section}/{sem}.json")
-    fun getTimetableImpl(
+    suspend fun getTimetable(
       @Path("year") year: String,
       @Path("section") section: String,
       @Path("sem") semester: String
-    ): Call<Timetable>
+    ): Timetable
   }
+
+  private val cache = mutableMapOf<TimetableSpec, Timetable>()
 
   val impl: RegistryServiceImpl by lazy {
     Retrofit.Builder()
@@ -31,9 +31,13 @@ class RegistryService {
       .create(RegistryServiceImpl::class.java)
   }
 
-  fun getRegistry(): Call<Registry> = impl.getRegistry()
-  fun getTimetable(spec: TimetableSpec) =
-    impl.getTimetableImpl(spec.year, spec.section, spec.semester)
+  suspend fun getRegistry(): Registry = impl.getRegistry()
+  
+  suspend fun getTimetable(spec: TimetableSpec): Timetable {
+    return cache.getOrPut(spec) {
+      impl.getTimetable(spec.year, spec.section, spec.semester)
+    }
+  }
 
   companion object {
     val instance = RegistryService()

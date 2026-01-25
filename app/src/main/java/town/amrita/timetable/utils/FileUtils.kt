@@ -71,7 +71,7 @@ fun Context.getFileContent(uri: Uri): Timetable {
 
 @OptIn(ExperimentalSerializationApi::class)
 suspend fun Context.updateTimetableFromRegistry(spec: TimetableSpec, config: Map<String, String>, useCurrentConfig: Boolean) {
-  val newTT = RegistryService.instance.getTimetable(spec).await()
+  val newTT = RegistryService.instance.getTimetable(spec)
   this.openFileOutput("$spec.json", MODE_PRIVATE).use { out ->
     Json.encodeToStream(newTT, out)
   }

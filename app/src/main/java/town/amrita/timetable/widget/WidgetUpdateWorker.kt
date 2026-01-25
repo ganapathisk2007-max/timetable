@@ -65,7 +65,7 @@ class WidgetUpdateWorker(context: Context, workParams: WorkerParameters) :
         val file = config.file ?: return Result.failure()
         val spec = TimetableSpec.fromString(file)
 
-        val newTimetable = RegistryService.instance.getTimetable(spec).await()
+        val newTimetable = RegistryService.instance.getTimetable(spec)
 
         val currentChoices = config.electiveChoices
         val isIncompatible =

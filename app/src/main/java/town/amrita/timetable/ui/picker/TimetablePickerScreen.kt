@@ -349,7 +349,7 @@ class RegistryScreenViewModel : ViewModel() {
     viewModelScope.launch {
       _state.value = TimetablePickerScreenState.IndexLoading
       try {
-        registryYears = RegistryService.instance.getRegistry().await().timetables
+        registryYears = RegistryService.instance.getRegistry().timetables
         _state.value = TimetablePickerScreenState.Ready(years = registryYears.keys)
       } catch (e: Exception) {
         Log.d("Timetable", e.toString())
@@ -362,7 +362,7 @@ class RegistryScreenViewModel : ViewModel() {
     viewModelScope.launch {
       _state.value = TimetablePickerScreenState.IndexLoading
       try {
-        registryYears = RegistryService.instance.getRegistry().await().timetables
+        registryYears = RegistryService.instance.getRegistry().timetables
         _state.value = TimetablePickerScreenState.Ready(years = registryYears.keys)
       } catch (e: Exception) {
         Log.d("Timetable", e.toString())
@@ -439,7 +439,7 @@ class RegistryScreenViewModel : ViewModel() {
 
       updateIfReady { it.copy(timetable = TimetableState.Loading) }
       try {
-        val tt = RegistryService.instance.getTimetable(spec).await()
+        val tt = RegistryService.instance.getTimetable(spec)
         val errors = tt.validate()
 
         updateIfReady {
