@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import town.amrita.timetable.models.Timetable
-import town.amrita.timetable.ui.components.DropdownPicker
+import town.amrita.timetable.ui.components.ChipsPicker
 import town.amrita.timetable.ui.components.TimetablePreview
 import town.amrita.timetable.ui.components.TimetableScaffold
 
@@ -32,23 +32,22 @@ fun ConfigPickerScreen(
 
   TimetableScaffold(
     title = "Configure Timetable",
-  ) {
+  ) { horizontalPadding ->
     Column(
       modifier = Modifier.fillMaxSize(),
       verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
       if (timetable.config.isEmpty()) {
-        Column(Modifier.padding(horizontal = 24.dp)) {
+        Column(Modifier.padding(horizontal = horizontalPadding)) {
           Text("No configuration needed for this timetable.", fontWeight = FontWeight.Medium)
         }
         Spacer(Modifier.weight(1f))
       } else {
         Column(
-          Modifier.padding(horizontal = 24.dp),
           verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
           for ((key, option) in timetable.config) {
-            DropdownPicker(
+            ChipsPicker(
               options = option.values.map { it.id },
               displayOptions = option.values.map { it.label },
               selected = selectedConfig[key],
@@ -56,7 +55,8 @@ fun ConfigPickerScreen(
               allowNull = false,
               onSelectionChanged = { newValue ->
                 selectedConfig = selectedConfig + (key to (newValue ?: ""))
-              }
+              },
+              horizontalPadding = horizontalPadding
             )
           }
         }
@@ -66,11 +66,12 @@ fun ConfigPickerScreen(
             .weight(1f)
             .fillMaxSize(),
           timetable = timetable,
-          config = selectedConfig
+          config = selectedConfig,
+          horizontalPadding = horizontalPadding
         )
       }
 
-      Box(Modifier.padding(horizontal = 24.dp)) {
+      Box(Modifier.padding(horizontal = horizontalPadding)) {
         UseTimetableButton(
           modifier = Modifier.fillMaxWidth(),
           enabled = selectedConfig.values.all { it.isNotEmpty() },

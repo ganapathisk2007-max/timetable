@@ -42,6 +42,7 @@ import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import town.amrita.timetable.R
@@ -74,6 +75,7 @@ fun TimetablePreview(
   day: DayOfWeek? = TODAY,
   dayChanged: (DayOfWeek) -> Unit = {},
   config: Map<String, String>? = null,
+  horizontalPadding: Dp = 0.dp,
 ) {
   val context = LocalContext.current
   val widgetConfig = context.widgetConfig.data.collectAsState(DEFAULT_CONFIG)
@@ -96,9 +98,9 @@ fun TimetablePreview(
           state = pagerState,
           pageSpacing = 8.dp,
           pageSize = StaggeredPageSize,
-          snapPosition = SnapPosition.Center,
+          snapPosition = SnapPosition.Start,
           verticalAlignment = Alignment.Top,
-          contentPadding = PaddingValues(horizontal = 24.dp)
+          contentPadding = PaddingValues(horizontal = horizontalPadding)
         ) { page ->
           val day = DAYS[page]
           val timetableDisplay =

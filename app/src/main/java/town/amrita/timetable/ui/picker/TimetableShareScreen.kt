@@ -52,25 +52,27 @@ fun TimetableShareScreen(uri: Uri?, goToConfig: (Timetable, Uri) -> Unit = { _, 
   }
 
   TimetableTheme {
-    TimetableScaffold("Import Timetable") {
+    TimetableScaffold("Import Timetable") { horizontalPadding ->
       Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(24.dp)) {
         if (uri == null) {
-          Text("No URI provided", Modifier.padding(horizontal = 24.dp))
+          Text("No URI provided", Modifier.padding(horizontal = horizontalPadding))
           return@Column
         }
 
         timetable?.let { timetable ->
-          Text(name, Modifier.padding(horizontal = 24.dp))
+          Text(name, Modifier.padding(horizontal = horizontalPadding))
           if (validationResult.isEmpty()) {
             TimetablePreview(
               Modifier
                 .weight(1f)
-                .fillMaxSize(), timetable = timetable
+                .fillMaxSize(),
+              timetable = timetable,
+              horizontalPadding = horizontalPadding
             )
           } else {
             Column(
               Modifier
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = horizontalPadding)
                 .weight(1f)
                 .fillMaxSize()) {
               Text(text = "⚠️ Errors found", fontWeight = FontWeight.Medium)
@@ -82,7 +84,7 @@ fun TimetableShareScreen(uri: Uri?, goToConfig: (Timetable, Uri) -> Unit = { _, 
 
           val needsConfig = timetable.config.isNotEmpty()
 
-          Box(Modifier.padding(horizontal = 24.dp)) {
+          Box(Modifier.padding(horizontal = horizontalPadding)) {
             if (needsConfig) {
               Button(
                 modifier = Modifier.fillMaxWidth(),

@@ -58,9 +58,9 @@ fun SettingsScreen() {
   val context = LocalContext.current
   val settings by context.widgetConfig.data.collectAsState(DEFAULT_CONFIG)
 
-  TimetableScaffold("Settings") {
+  TimetableScaffold("Settings") { horizontalPadding ->
     Column(
-      Modifier.padding(horizontal = 24.dp),
+      Modifier.padding(horizontal = horizontalPadding),
       verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
       Row(

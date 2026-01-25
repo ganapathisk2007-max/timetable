@@ -71,10 +71,11 @@ fun LocalPickerScreen(
       uri?.let(readFromUri)
     }
 
-  TimetableScaffold(title = "Select File") {
+  TimetableScaffold(title = "Select File") { horizontalPadding ->
+
     Column(Modifier.fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
       Row(
-        Modifier.padding(horizontal = 24.dp),
+        Modifier.padding(horizontal = horizontalPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
       ) {
@@ -102,7 +103,7 @@ fun LocalPickerScreen(
               is LocalTimetableState.ReadError ->
                 Column(
                   Modifier
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = horizontalPadding)
                     .weight(1f)
                     .fillMaxSize(),
                   verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -118,7 +119,7 @@ fun LocalPickerScreen(
               is LocalTimetableState.ValidationError ->
                 Column(
                   Modifier
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = horizontalPadding)
                     .weight(1f)
                     .fillMaxSize()
                 ) {
@@ -135,7 +136,8 @@ fun LocalPickerScreen(
                     .fillMaxSize(), 
                   timetable = timetable,
                   day = selectedDay,
-                  dayChanged = { newDay -> selectedDay = newDay }
+                  dayChanged = { newDay -> selectedDay = newDay },
+                  horizontalPadding = horizontalPadding
                 )
             }
           }
@@ -148,7 +150,7 @@ fun LocalPickerScreen(
         ?.config
         ?.isNotEmpty() == true
 
-      Box(Modifier.padding(horizontal = 24.dp)) {
+      Box(Modifier.padding(horizontal = horizontalPadding)) {
         if (needsConfig) {
           Button(
             modifier = Modifier.fillMaxWidth(),

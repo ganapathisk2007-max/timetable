@@ -25,7 +25,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,8 +54,7 @@ import town.amrita.timetable.registry.RegistryService
 import town.amrita.timetable.registry.RegistryYears
 import town.amrita.timetable.ui.LocalGlobalActions
 import town.amrita.timetable.ui.TimetableTheme
-import town.amrita.timetable.ui.components.DropdownPicker
-import town.amrita.timetable.ui.components.LocalSnackbarState
+import town.amrita.timetable.ui.components.ChipsPicker
 import town.amrita.timetable.ui.components.TimetablePreview
 import town.amrita.timetable.ui.components.TimetableScaffold
 import town.amrita.timetable.ui.components.TooltipContainer
@@ -70,7 +68,6 @@ fun TimetablePickerScreen(
   goToLocalPicker: () -> Unit = {},
   goToConfig: (Timetable, TimetableSpec) -> Unit = { _, _ -> }
 ) {
-  val scope = rememberCoroutineScope()
   val context = LocalContext.current
   val state = viewModel.state.collectAsStateWithLifecycle().value
   val currentWidgetConfig by context.widgetConfig.data.collectAsStateWithLifecycle(DEFAULT_CONFIG)
@@ -113,9 +110,7 @@ fun TimetablePickerScreen(
       }
       (LocalGlobalActions.current)()
     }
-  ) {
-    val snackbarHostState = LocalSnackbarState.current
-
+  ) { horizontalPadding ->
     if (showUseCurrentDialog) {
       AlertDialog(
         onDismissRequest = { showUseCurrentDialog = false },
@@ -173,7 +168,7 @@ fun TimetablePickerScreen(
 
         is TimetablePickerScreenState.IndexError ->
           Column(
-            Modifier.padding(horizontal = 24.dp),
+            Modifier.padding(horizontal = horizontalPadding),
             verticalArrangement = Arrangement.spacedBy(8.dp)
           ) {
             Text("⚠️ Error: ${state.message}")
@@ -184,33 +179,36 @@ fun TimetablePickerScreen(
             }
           }
 
+
         is TimetablePickerScreenState.Ready ->
           with(state) {
             Column(
-              Modifier.padding(horizontal = 24.dp),
               verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-              DropdownPicker(
+              ChipsPicker(
                 options = years.toList().sorted(),
                 selected = currentYear,
                 label = "Start Year",
-                onSelectionChanged = viewModel::yearChanged
+                onSelectionChanged = viewModel::yearChanged,
+                horizontalPadding = horizontalPadding
               )
               if(sections.isEmpty())
                 return@Column
-              DropdownPicker(
+              ChipsPicker(
                 options = sections.toList().sortedBy { x -> x.split("-").last() },
                 selected = currentSection,
                 label = "Section",
-                onSelectionChanged = viewModel::sectionChanged
+                onSelectionChanged = viewModel::sectionChanged,
+                horizontalPadding = horizontalPadding
               )
               if(semesters.isEmpty())
                 return@Column
-              DropdownPicker(
+              ChipsPicker(
                 options = semesters.toList().sorted(),
                 selected = currentSemester,
                 label = "Semester",
-                onSelectionChanged = viewModel::semesterChanged
+                onSelectionChanged = viewModel::semesterChanged,
+                horizontalPadding = horizontalPadding
               )
             }
           }
@@ -273,7 +271,8 @@ fun TimetablePickerScreen(
                   .fillMaxSize(),
                 timetable = timetable,
                 day = selectedDay,
-                dayChanged = { newDay -> selectedDay = newDay }
+                dayChanged = { newDay -> selectedDay = newDay },
+                horizontalPadding = horizontalPadding
               )
           }
         }
@@ -286,7 +285,7 @@ fun TimetablePickerScreen(
         ?.config
         ?.isNotEmpty() == true
 
-      Box(Modifier.padding(horizontal = 24.dp)) {
+      Box(Modifier.padding(horizontal = horizontalPadding)) {
         if (needsConfig) {
           Button(
             modifier = Modifier.fillMaxWidth(),

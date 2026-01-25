@@ -20,6 +20,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import town.amrita.timetable.ui.LocalGlobalActions
 
@@ -30,9 +31,10 @@ val LocalSnackbarState = compositionLocalOf<SnackbarHostState> { error("No snack
 fun TimetableScaffold(
   title: String,
   actions: @Composable (RowScope.() -> Unit) = LocalGlobalActions.current,
-  content: @Composable () -> Unit,
+  content: @Composable (horizontalPadding: Dp) -> Unit,
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
+  val horizontalPadding = 24.dp
 
   Scaffold(
     modifier = Modifier.fillMaxSize(),
@@ -56,7 +58,7 @@ fun TimetableScaffold(
   ) { innerPadding ->
     CompositionLocalProvider(LocalSnackbarState provides snackbarHostState) {
       Box(Modifier.padding(innerPadding)) {
-        content()
+        content(horizontalPadding)
       }
     }
   }
