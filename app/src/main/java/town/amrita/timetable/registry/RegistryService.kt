@@ -33,7 +33,13 @@ class RegistryService {
 
   suspend fun getRegistry(): Registry = impl.getRegistry()
   
-  suspend fun getTimetable(spec: TimetableSpec): Timetable {
+  suspend fun getTimetable(spec: TimetableSpec, skipCache: Boolean = false): Timetable {
+    if (skipCache) {
+      val timetable = impl.getTimetable(spec.year, spec.section, spec.semester)
+      cache[spec] = timetable
+      return timetable
+    }
+    
     return cache.getOrPut(spec) {
       impl.getTimetable(spec.year, spec.section, spec.semester)
     }
