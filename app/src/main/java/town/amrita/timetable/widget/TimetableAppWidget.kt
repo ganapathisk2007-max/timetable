@@ -168,10 +168,11 @@ fun TimetableWidget(
   next: String? = null,
 ) {
   val textStyle = TextStyle(color = GlanceTheme.colors.onSurface)
+  val isToday = (day == TODAY || locked)
 
   GlanceTheme {
     Scaffold(
-      titleBar = { TitleBar(day, locked, current, next) },
+      titleBar = { TitleBar(day, locked, current, next, isToday) },
       backgroundColor = GlanceTheme.colors.background,
       modifier = GlanceModifier.padding(bottom = 12.dp),
     ) {
@@ -192,7 +193,7 @@ fun TimetableWidget(
               }
 
               Box(GlanceModifier.padding(bottom = padding)) {
-                TimetableItem(time)
+                TimetableItem(time, isToday)
               }
             }
           }
@@ -203,7 +204,7 @@ fun TimetableWidget(
 }
 
 @Composable
-fun TitleBar(day: DayOfWeek, locked: Boolean, current: String? = null, next: String? = null) {
+fun TitleBar(day: DayOfWeek, locked: Boolean, current: String? = null, next: String? = null, isToday: Boolean) {
   val textStyle =
     TextStyle(color = GlanceTheme.colors.onSurface)
   val strongTextStyle =
@@ -251,7 +252,7 @@ fun TitleBar(day: DayOfWeek, locked: Boolean, current: String? = null, next: Str
         )
       }
 
-      if (isBeeg && (current != null || next != null) && (day == TODAY || locked)) {
+      if (isBeeg && (current != null || next != null) && isToday) {
         val currentNextString = when {
           current != null && next != null -> "Now $current, next $next"
           current != null -> "Now $current"
@@ -293,21 +294,21 @@ fun TitleBar(day: DayOfWeek, locked: Boolean, current: String? = null, next: Str
 }
 
 @Composable
-fun TimetableItem(item: TimetableDisplayEntry) {
+fun TimetableItem(item: TimetableDisplayEntry, isToday: Boolean) {
 
   val isBeeg = LocalSize.current.width >= BEEG.width
 
   with(item) {
-    val isActive = item.slot.containsTime(LocalTime.now())
+    val isCurrent = isToday && item.slot.containsTime(LocalTime.now())
 
     val backgroundColor =
-      if (isActive) GlanceTheme.colors.primary else GlanceTheme.colors.widgetBackground
-    val textColor = if (isActive) GlanceTheme.colors.onPrimary else GlanceTheme.colors.onSurface
+      if (isCurrent) GlanceTheme.colors.primary else GlanceTheme.colors.widgetBackground
+    val textColor = if (isCurrent) GlanceTheme.colors.onPrimary else GlanceTheme.colors.onSurface
     val textStyle = TextStyle(color = textColor)
     val strongTextStyle =
       TextStyle(color = textColor, fontWeight = FontWeight.Medium)
 
-    val iconColor = if (isActive) GlanceTheme.colors.onPrimary else GlanceTheme.colors.primary
+    val iconColor = if (isCurrent) GlanceTheme.colors.onPrimary else GlanceTheme.colors.primary
 
     Box(
       GlanceModifier
