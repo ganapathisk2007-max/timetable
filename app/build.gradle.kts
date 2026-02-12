@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.serialization)
 }
@@ -15,8 +14,8 @@ android {
     applicationId = "town.amrita.timetable"
     minSdk = 29
     targetSdk = 36
-    versionCode = 13
-    versionName = "1.1.2"
+    versionCode = 14
+    versionName = "1.1.3"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -46,12 +45,6 @@ android {
     }
   }
 
-  kotlin {
-    compilerOptions {
-      jvmTarget = JvmTarget.fromTarget("17")
-    }
-  }
-
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -60,6 +53,12 @@ android {
     compose = true
     viewBinding = true
     buildConfig = true
+  }
+}
+
+kotlin {
+  compilerOptions {
+    jvmTarget = JvmTarget.fromTarget("17")
   }
 }
 
