@@ -86,7 +86,8 @@ class TimetableAppWidget : GlanceAppWidget() {
         if (it.file == null)
           return@map null
 
-        val timetable: Timetable = context.openFileInput("${it.file.removeSuffix(".json")}.json").use(Json::decodeFromStream)
+        val timetable: Timetable =
+          context.openFileInput("${it.file.removeSuffix(".json")}.json").use(Json::decodeFromStream)
 
         val dayToShow =
           when (it.day) {
@@ -99,7 +100,10 @@ class TimetableAppWidget : GlanceAppWidget() {
 
             else -> it.day
           }
-        Pair(dayToShow, buildTimetableDisplay(dayToShow, timetable, it.showFreePeriods, it.electiveChoices))
+        Pair(
+          dayToShow,
+          buildTimetableDisplay(dayToShow, timetable, it.showFreePeriods, it.electiveChoices)
+        )
       }.stateIn(this)
 
       context.ensureWorkAndAlarms()
@@ -113,14 +117,19 @@ class TimetableAppWidget : GlanceAppWidget() {
             Column(
               modifier = GlanceModifier.fillMaxSize().background(GlanceTheme.colors.background),
               horizontalAlignment = Alignment.CenterHorizontally,
-              verticalAlignment = Alignment.CenterVertically) {
+              verticalAlignment = Alignment.CenterVertically
+            ) {
               Text("Timetable not configured", style = textStyle)
               Spacer(GlanceModifier.height(4.dp))
-              Button(text = "Configure", onClick = actionStartActivity<MainActivity>(
-                actionParametersOf(
-                  ActionParameters.Key<Int>(AppWidgetManager.EXTRA_APPWIDGET_ID) to GlanceAppWidgetManager(context).getAppWidgetId(id)
+              Button(
+                text = "Configure", onClick = actionStartActivity<MainActivity>(
+                  actionParametersOf(
+                    ActionParameters.Key<Int>(AppWidgetManager.EXTRA_APPWIDGET_ID) to GlanceAppWidgetManager(
+                      context
+                    ).getAppWidgetId(id)
+                  )
                 )
-              ))
+              )
             }
           }
           return@provideContent
@@ -128,7 +137,9 @@ class TimetableAppWidget : GlanceAppWidget() {
         val (day, times) = timetableState!!
 
         val isLockedNow =
-          with(data.lockedUntil) { this != null && Instant.ofEpochSecond(this).isAfter(Instant.now()) }
+          with(data.lockedUntil) {
+            this != null && Instant.ofEpochSecond(this).isAfter(Instant.now())
+          }
 
         val currentPeriod = times.fastFirstOrNull { it.slot.containsTime(LocalTime.now()) }
         val nextPeriod = when {
@@ -204,7 +215,13 @@ fun TimetableWidget(
 }
 
 @Composable
-fun TitleBar(day: DayOfWeek, locked: Boolean, current: String? = null, next: String? = null, isToday: Boolean) {
+fun TitleBar(
+  day: DayOfWeek,
+  locked: Boolean,
+  current: String? = null,
+  next: String? = null,
+  isToday: Boolean
+) {
   val textStyle =
     TextStyle(color = GlanceTheme.colors.onSurface)
   val strongTextStyle =
@@ -224,7 +241,8 @@ fun TitleBar(day: DayOfWeek, locked: Boolean, current: String? = null, next: Str
         .defaultWeight()
         .height(48.dp)
         .padding(start = 16.dp)
-        .clickable(actionStartActivity<DateSwitcherActivity>())) {
+        .clickable(actionStartActivity<DateSwitcherActivity>())
+    ) {
       Box(
         contentAlignment = Alignment.Center,
         modifier = GlanceModifier
