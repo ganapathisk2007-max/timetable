@@ -144,8 +144,8 @@ class TimetableAppWidget : GlanceAppWidget() {
           if (!data.showCompletedPeriods && (day == TODAY || isLockedNow))
             times.filter { it.slot.end > LocalTime.now() }
           else times,
-          currentPeriod?.shortName,
-          nextPeriod?.shortName,
+          currentPeriod?.subject?.shortName,
+          nextPeriod?.subject?.shortName,
         )
       }
     }
@@ -318,7 +318,7 @@ fun TimetableItem(item: TimetableDisplayEntry) {
     ) {
       Column {
         Row(verticalAlignment = Alignment.Vertical.CenterVertically) {
-          Text(if (isBeeg) name else shortName, style = strongTextStyle)
+          Text(if (isBeeg) subject.name else subject.shortName, style = strongTextStyle)
           Spacer(GlanceModifier.padding(start = 4.dp))
           if (lab) {
             Image(

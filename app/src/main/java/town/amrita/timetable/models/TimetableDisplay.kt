@@ -5,8 +5,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 data class TimetableDisplayEntry(
-  val name: String,
-  val shortName: String,
+  val subject: Subject,
   val slot: TimetableSlot,
   val start: Int,
   val end: Int,
@@ -117,8 +116,7 @@ fun buildTimetableDisplay(
     if (showFreePeriods || subject != Subject.FREE)
       times.add(
         TimetableDisplayEntry(
-          subject.name,
-          subject.shortName,
+          subject,
           slot,
           i,
           i + offset - 1,

@@ -169,7 +169,7 @@ private fun TimetableItem(item: TimetableDisplayEntry) {
         Row(verticalAlignment = Alignment.CenterVertically) {
           Text(
             text = buildAnnotatedString {
-              append(name)
+              append(subject.name)
               if (lab) {
                 append(" ")
                 appendInlineContent("labIcon", "[labIcon]")
